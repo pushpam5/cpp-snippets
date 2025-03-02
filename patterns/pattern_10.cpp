@@ -27,6 +27,7 @@ void print(int spaces, int stars){
     for(int j = 0; j < spaces;j++){
         cout << " ";
     }
+    cout << endl;
 }
 
 int main() {
@@ -41,7 +42,6 @@ int main() {
         }
         spaces = 2 * n - stars;
         print(spaces, stars);
-        cout << endl;
 
     }
     return 0;
