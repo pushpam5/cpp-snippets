@@ -8,20 +8,21 @@ Space complexity: O(n) for mergeO1, O(n) extra for merge
 mergeO1 does not work for negative numbers
 */
 
-void merge(int arr[], int low, int mid, int high);
+int merge(int arr[], int low, int mid, int high);
 
 /*
 Concept used here:
 
-Suppose we want to store arr[i] and arr[j] both at index i(means in arr[i]). 
-First we have to find a ‘maxval’ greater than both arr[i] and arr[j]. Now we can store as arr[i] = arr[i] + arr[j]*maxval. 
-Now arr[i]%maxval will give the original value of arr[i] and arr[i]/maxval will give the value of arr[j]. 
+Suppose we want to store arr[i] and arr[j] both at index i(means in arr[i]).
+First we have to find a ‘maxval’ greater than both arr[i] and arr[j]. Now we can store as arr[i] = arr[i] + arr[j]*maxval.
+Now arr[i]%maxval will give the original value of arr[i] and arr[i]/maxval will give the value of arr[j].
 */
-void mergeO1(int arr[], int low, int mid, int high, int maxelement)
+int mergeO1(int arr[], int low, int mid, int high, int maxelement)
 {
     int i = low;
     int j = mid + 1;
     int k = low;
+    int inversions = 0;
     while (i <= mid && j <= high)
     {
         if (arr[i] % maxelement <= arr[j] % maxelement)
@@ -33,6 +34,7 @@ void mergeO1(int arr[], int low, int mid, int high, int maxelement)
         {
             arr[k] = arr[k] + (arr[j] % maxelement) * maxelement;
             j++;
+            inversions += (mid - i + 1);
         }
         k++;
     }
@@ -55,28 +57,32 @@ void mergeO1(int arr[], int low, int mid, int high, int maxelement)
     {
         arr[i] = arr[i] / maxelement;
     }
+    return inversions;
 }
 
-void mergeSort(int arr[], int low, int high, int maxElement)
+int mergeSort(int arr[], int low, int high, int maxElement)
 {
     if (low >= high)
     {
-        return;
+        return 0;
     }
-
+    int inversions = 0;
     int mid = (low + high) / 2;
-    mergeSort(arr, low, mid, maxElement);
-    mergeSort(arr, mid + 1, high, maxElement);
+    inversions += mergeSort(arr, low, mid, maxElement);
+    inversions += mergeSort(arr, mid + 1, high, maxElement);
     // merge(arr, low, mid, high);
-    mergeO1(arr, low, mid, high, maxElement);
+    inversions += mergeO1(arr, low, mid, high, maxElement);
+
+    return inversions;
 }
 
-void merge(int arr[], int low, int mid, int high)
+int merge(int arr[], int low, int mid, int high)
 {
     int i = low;
     int j = mid + 1;
     int temp[high - low + 1];
     int k = 0;
+    int inversions = 0;
     while (i <= mid && j <= high)
     {
         if (arr[i] <= arr[j])
@@ -86,6 +92,7 @@ void merge(int arr[], int low, int mid, int high)
         else
         {
             temp[k++] = arr[j++];
+            inversions += (mid - i + 1);
         }
     }
 
@@ -103,6 +110,7 @@ void merge(int arr[], int low, int mid, int high)
     {
         arr[i] = temp[i - low];
     }
+    return inversions;
 }
 
 int main()
@@ -116,7 +124,7 @@ int main()
     }
 
     // max_element gives an iterator to the largest element in the range [first, last)
-    mergeSort(arr, 0, n - 1, *max_element(arr, arr + n) + 1);
+    cout << "Inversions: " << mergeSort(arr, 0, n - 1, *max_element(arr, arr + n) + 1) << endl;
 
     for (int i : arr)
     {
