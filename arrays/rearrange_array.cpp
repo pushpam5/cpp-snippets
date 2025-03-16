@@ -4,23 +4,25 @@ using namespace std;
 
 vector<int> rearrangeArray(vector<int> &nums)
 {
-    int even = 0, odd = 1;
+    int n = nums.size();
+    vector<int> ans(n, 0);
+    int odd = 1, even = 0;
 
-    for (int i = 0; i < nums.size(); i++)
+    for (int i = 0; i < n; i++)
     {
         if (nums[i] >= 0)
         {
-            swap(nums[i], nums[even]);
+            ans[even] = nums[i];
             even += 2;
         }
         else
         {
-            swap(nums[i], nums[odd]);
+            ans[odd] = nums[i];
             odd += 2;
         }
     }
 
-    return nums;
+    return ans;
 }
 
 int main()
@@ -33,7 +35,7 @@ int main()
     {
         cin >> nums[i];
     }
-    rearrangeArray(nums);
+    nums = rearrangeArray(nums);
     for (int i = 0; i < n; i++)
     {
         cout << nums[i] << " ";
