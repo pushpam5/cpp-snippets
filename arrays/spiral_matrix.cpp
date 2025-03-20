@@ -60,12 +60,7 @@ int main()
             cin >> matrix[i][j];
         }
     }
-
-
-
-
     vector<int> ans = spiralOrder(matrix);
-
     for (int i = 0; i < ans.size(); i++)
     {
         cout << ans[i] << " ";
